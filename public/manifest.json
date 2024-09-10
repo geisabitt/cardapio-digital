@@ -1,9 +1,9 @@
 {
-  "short_name": "Aplicação React",
-  "name": "Templade Dev Samurai de aplicação React",
+  "short_name": "Cardápio Digital",
+  "name": "Cardápio Digital Ideal para Delivery, Açaiteria, Hamburgueria e Todos os Tipos de Lanches",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
