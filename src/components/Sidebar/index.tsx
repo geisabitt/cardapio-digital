@@ -26,36 +26,6 @@ export function Sidebar() {
               <span>Açaí</span>
             </NavLink>
           </li>
-          {/* <li>
-            <NavLink to='/'>
-              <BurguerIcon />
-              <span>Hambúrgueres</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to='/ice-creams'>
-              <IceCreamIcon />
-              <span>Sorvetes</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to='/acais'>
-              <IceCreamIcon />
-              <span>Açaí</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to='/pizzas'>
-              <PizzaIcon />
-              <span>Pizza</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to='/drinks'>
-              <SodaIcon />
-              <span>Bebidas</span>
-            </NavLink>
-          </li> */}
         </ul>
       </nav>
     </Container>
