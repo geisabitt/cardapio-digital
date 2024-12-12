@@ -7,6 +7,7 @@ import plusImg from '../../../../assets/circle-plus.svg'
 import minusImg from '../../../../assets/circle-minus.svg'
 
 import { Container } from './style'
+import { SnackAdditionals } from '../../../../interfaces/Snack'
 
 export function TableDesktop() {
   const { cart, removeSnackFromCart, snackCartDecrement, snackCartIncrement } = useCart()
@@ -32,15 +33,34 @@ export function TableDesktop() {
               <td>
                 <h4>{item.name}</h4>
                 <span>{currencyFormat(item.price)}</span>
+                <h4>Adicionais</h4>
+                {/* Mapeando os adicionais e exibindo-os */}
+                {item.additionals && item.additionals.length > 0 ? (
+                  <ul>
+                    {item.additionals.map((additional, index) => (
+                      <li key={index}>
+                        {additional.name} - {currencyFormat(additional.price)}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span>Sem adicionais</span>
+                )}
               </td>
               <td>
                 <div>
-                  <button type='button' onClick={() => snackCartDecrement(item)}>
+                  <button
+                    type='button'
+                    onClick={() => snackCartDecrement(item as SnackAdditionals)}
+                  >
                     <img src={minusImg} alt='Remover Item' />
                   </button>
-                  <span>{`${item.quantity}`.padStart(2, '0')}</span>
-                  <button type='button' onClick={() => snackCartIncrement(item)}>
-                    <img src={plusImg} alt='Remover Item' />
+
+                  <button
+                    type='button'
+                    onClick={() => snackCartIncrement(item as SnackAdditionals)}
+                  >
+                    <img src={plusImg} alt='Adicionar Item' />
                   </button>
                 </div>
               </td>
@@ -48,7 +68,7 @@ export function TableDesktop() {
                 <h5>{currencyFormat(item.subtotal)}</h5>
               </td>
               <td>
-                <button type='button' onClick={() => removeSnackFromCart(item)}>
+                <button type='button' onClick={() => removeSnackFromCart(item as SnackAdditionals)}>
                   <FaTrashAlt />
                 </button>
               </td>

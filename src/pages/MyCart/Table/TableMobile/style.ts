@@ -7,7 +7,7 @@ export const Container = styled.div`
 
   .order-item {
     background: ${({ theme }) => theme.colors.black};
-    padding: 1.75rem 1.5rem;
+    padding: 1.5rem 1.2rem;
     border-radius: 4px;
 
     display: grid;
@@ -111,7 +111,7 @@ export const Container = styled.div`
       padding: 1rem;
 
       > div:first-child {
-        height: 10rem;
+        height: 16rem;
       }
 
       > div:last-child {
@@ -121,10 +121,10 @@ export const Container = styled.div`
 
         h5 {
           span {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
           }
 
-          font-size: 2.25rem;
+          font-size: 1.8rem;
         }
       }
     }

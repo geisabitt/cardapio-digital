@@ -1,21 +1,18 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
-import { SnackData } from '../interfaces/SnackData'
+import { createContext, ReactNode, useState } from 'react'
+// import { createContext, ReactNode, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { snackEmoji } from '../helpers/snackEmoji'
 import { useNavigate } from 'react-router-dom'
 import { CustomerData } from '../interfaces/CustomerData'
-
-interface Snack extends SnackData {
-  quantity: number
-  subtotal: number
-}
+import { Snack, SnackAdditionals } from '../interfaces/Snack'
+import { processCheckout } from '../services/api'
 
 interface CartContextProps {
   cart: Snack[]
-  addSnackIntoCart: (snack: SnackData) => void
-  removeSnackFromCart: (snack: Snack) => void
-  snackCartIncrement: (snack: Snack) => void
-  snackCartDecrement: (snack: Snack) => void
+  addSnackIntoCart: (snack: SnackAdditionals) => void
+  removeSnackFromCart: (snack: SnackAdditionals) => void
+  snackCartIncrement: (snack: SnackAdditionals) => void
+  snackCartDecrement: (snack: SnackAdditionals) => void
   confirmOrder: () => void
   payOrder: (customer: CustomerData) => void
 }
@@ -44,26 +41,38 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
     localStorage.removeItem(localStorageKey)
   }
 
-  function addSnackIntoCart(snack: SnackData): void {
-    const snackExixtentInCart = cart.find(
-      (item) => item.snack === snack.snack && item.id === snack.id,
-    )
+  function addSnackIntoCart(snack: SnackAdditionals): void {
+    // const snackExixtentInCart = cart.find(
+    //   (item) => item.snack === snack.snack && item.id === snack.id,
+    // )
 
-    if (snackExixtentInCart) {
-      const newCart = cart.map((item) => {
-        if (item.id === snack.id) {
-          const quantity = item.quantity + 1
-          const subtotal = item.price * quantity
-          return { ...item, quantity, subtotal }
-        }
-        return item
-      })
-      toast.success(`Outro(a) ${snackEmoji(snack.snack)} ${snack.name} adicionado aos pedidos`)
-      saveCart(newCart)
-      return
+    // if (snackExixtentInCart) {
+    //   const newCart = cart.map((item) => {
+    //     if (item.id === snack.id) {
+    //       const quantity = item.quantity + 1
+    //       const subtotal = item.price * quantity
+    //       return { ...item, quantity, subtotal }
+    //     }
+    //     return item
+    //   })
+    //   toast.success(`Outro(a) ${snackEmoji(snack.snack)} ${snack.name} adicionado aos pedidos`)
+    //   saveCart(newCart)
+    //   return
+    // }
+
+    const additionalsTotal = snack.additionals
+      ? snack.additionals.reduce(
+          (acc, additional) =>
+            acc + (isNaN(Number(additional.price)) ? 0 : Number(additional.price)),
+          0,
+        )
+      : 0
+
+    const newSnack = {
+      ...snack,
+      quantity: 1,
+      subtotal: (isNaN(Number(snack.price)) ? 0 : Number(snack.price)) + additionalsTotal,
     }
-
-    const newSnack = { ...snack, quantity: 1, subtotal: snack.price }
     const newCart = [...cart, newSnack]
 
     toast.success(`${snackEmoji(snack.snack)} ${snack.name} adicionado aos pedidos`)
@@ -71,12 +80,12 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
     saveCart(newCart)
   }
 
-  function removeSnackFromCart(snack: Snack) {
+  function removeSnackFromCart(snack: SnackAdditionals) {
     const newCart = cart.filter((item) => !(item.id === snack.id && item.snack === snack.snack))
     saveCart(newCart)
   }
 
-  function updateSnackQuantity(snack: Snack, newQuantity: number) {
+  function updateSnackQuantity(snack: SnackAdditionals, newQuantity: number) {
     if (newQuantity <= 0) return
 
     const snackExistentInCart = cart.find(
@@ -85,12 +94,16 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
 
     if (!snackExistentInCart) return
 
+    const additionalsTotal = snackExistentInCart.additionals
+      ? snackExistentInCart.additionals.reduce((acc, additional) => acc + additional.price, 0)
+      : 0
+
     const newCart = cart.map((item) => {
       if (item.id === snackExistentInCart.id && item.snack === snackExistentInCart.snack) {
         return {
           ...item,
           quantity: newQuantity,
-          subtotal: item.price * newQuantity,
+          subtotal: (item.price + +additionalsTotal) * newQuantity, // Atualizando o subtotal
         }
       }
 
@@ -100,22 +113,34 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
     saveCart(newCart)
   }
 
-  function snackCartIncrement(snack: Snack) {
+  function snackCartIncrement(snack: SnackAdditionals) {
     updateSnackQuantity(snack, snack.quantity + 1)
   }
 
-  function snackCartDecrement(snack: Snack) {
+  function snackCartDecrement(snack: SnackAdditionals) {
     updateSnackQuantity(snack, snack.quantity - 1)
   }
 
   function confirmOrder() {
     navigate('/payment')
   }
-  function payOrder(customer: CustomerData) {
+
+  async function payOrder(customer: CustomerData) {
     console.log('Pay Order', cart, customer)
 
-    clearCart() //deve ser executado apenas retorno positivo da api
-    return
+    try {
+      const response = await processCheckout(cart, customer)
+
+      if (response.data.status !== 'PAID') {
+        toast.error('Erro ao processar pagamento, por favor tente novamente.')
+        return
+      }
+      toast.success('Pagamento realizado com sucesso')
+      clearCart() //deve ser executado apenas retorno positivo da api
+    } catch (error) {
+      toast.error('Erro ao processar Pedido')
+      console.error(error)
+    }
   }
 
   return (

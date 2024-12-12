@@ -108,5 +108,10 @@ export const Container = styled.main`
         }
       }
     }
+
+    td ul li{
+        font-size: 0.75rem;
+        color: ${({ theme }) => theme.colors.gray500};
+    }
   }
 `

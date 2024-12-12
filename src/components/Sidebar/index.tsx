@@ -22,6 +22,12 @@ export function Sidebar() {
         <ul>
           <li>
             <NavLink to='/'>
+              <IceCreamIcon />
+              <span>Açaí</span>
+            </NavLink>
+          </li>
+          {/* <li>
+            <NavLink to='/'>
               <BurguerIcon />
               <span>Hambúrgueres</span>
             </NavLink>
@@ -30,6 +36,12 @@ export function Sidebar() {
             <NavLink to='/ice-creams'>
               <IceCreamIcon />
               <span>Sorvetes</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to='/acais'>
+              <IceCreamIcon />
+              <span>Açaí</span>
             </NavLink>
           </li>
           <li>
@@ -43,7 +55,7 @@ export function Sidebar() {
               <SodaIcon />
               <span>Bebidas</span>
             </NavLink>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </Container>

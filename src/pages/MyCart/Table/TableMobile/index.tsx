@@ -8,6 +8,7 @@ import plusImg from '../../../../assets/circle-plus.svg'
 
 import { Container } from './style'
 import { ConfirmOrder } from '../../../../components/OrderCloseAction/ConfirmOrder'
+import { SnackAdditionals } from '../../../../interfaces/Snack'
 
 export function TableMobile() {
   const { cart, removeSnackFromCart, snackCartIncrement, snackCartDecrement } = useCart()
@@ -24,15 +25,15 @@ export function TableMobile() {
             <span>{currencyFormat(item.price)}</span>
             <div>
               <div>
-                <button type='button' onClick={() => snackCartDecrement(item)}>
-                  <img src={minusImg} alt='Remover quantidade' />
+                <button type='button' onClick={() => snackCartDecrement(item as SnackAdditionals)}>
+                  <img src={minusImg} alt='Remover Item' />
                 </button>
-                <span>{`${item.quantity}`.padStart(2, '0')}</span>
-                <button type='button' onClick={() => snackCartIncrement(item)}>
-                  <img src={plusImg} alt='Adicionar quantidade' />
+
+                <button type='button' onClick={() => snackCartIncrement(item as SnackAdditionals)}>
+                  <img src={plusImg} alt='Adicionar Item' />
                 </button>
               </div>
-              <button type='button' onClick={() => removeSnackFromCart(item)}>
+              <button type='button' onClick={() => removeSnackFromCart(item as SnackAdditionals)}>
                 <FaTrashAlt />
               </button>
             </div>

@@ -1,16 +1,31 @@
 import { FiPlus } from 'react-icons/fi'
+import { useState } from 'react'
 import { Container } from './styles'
 import { currencyFormat } from '../../helpers/currencyFormat'
 import { SkeletonSnack } from './SkeletonSnaks'
 import { SnackData } from '../../interfaces/SnackData'
 import { useCart } from '../../hooks/useCart'
+import { Modal } from '../Modal'
 
 interface SnacksProps {
   snacks: SnackData[]
 }
 
 export function Snacks({ snacks }: SnacksProps) {
-  const { cart, addSnackIntoCart } = useCart()
+  const { cart } = useCart()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedSnack, setSelectedSnack] = useState<SnackData | null>(null)
+
+  const handleOpenModal = (snack: SnackData) => {
+    setSelectedSnack(snack)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setSelectedSnack(null)
+    setIsModalOpen(false)
+  }
+
   return (
     <Container>
       {!snacks.length
@@ -27,13 +42,15 @@ export function Snacks({ snacks }: SnacksProps) {
                 <p>{snack.description}</p>
                 <div>
                   <strong>{currencyFormat(snack.price)}</strong>
-                  <button type='button' onClick={() => addSnackIntoCart(snack)}>
+                  <button type='button' onClick={() => handleOpenModal(snack)}>
                     <FiPlus />
                   </button>
                 </div>
               </div>
             )
           })}
+
+      {isModalOpen && selectedSnack && <Modal snack={selectedSnack} onClose={handleCloseModal} />}
     </Container>
   )
 }
