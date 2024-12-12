@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useState } from 'react'
-// import { createContext, ReactNode, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { snackEmoji } from '../helpers/snackEmoji'
 import { useNavigate } from 'react-router-dom'
@@ -42,24 +41,6 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
   }
 
   function addSnackIntoCart(snack: SnackAdditionals): void {
-    // const snackExixtentInCart = cart.find(
-    //   (item) => item.snack === snack.snack && item.id === snack.id,
-    // )
-
-    // if (snackExixtentInCart) {
-    //   const newCart = cart.map((item) => {
-    //     if (item.id === snack.id) {
-    //       const quantity = item.quantity + 1
-    //       const subtotal = item.price * quantity
-    //       return { ...item, quantity, subtotal }
-    //     }
-    //     return item
-    //   })
-    //   toast.success(`Outro(a) ${snackEmoji(snack.snack)} ${snack.name} adicionado aos pedidos`)
-    //   saveCart(newCart)
-    //   return
-    // }
-
     const additionalsTotal = snack.additionals
       ? snack.additionals.reduce(
           (acc, additional) =>
