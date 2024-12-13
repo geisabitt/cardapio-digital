@@ -10,7 +10,8 @@ import { Container } from './style'
 import { SnackAdditionals } from '../../../../interfaces/Snack'
 
 export function TableDesktop() {
-  const { cart, removeSnackFromCart, snackCartDecrement, snackCartIncrement } = useCart()
+  const { cart, removeSnackFromCartByIndex, snackCartDecrementByIndex, snackCartIncrementByIndex } =
+    useCart()
 
   return (
     <Container>
@@ -25,7 +26,7 @@ export function TableDesktop() {
           </tr>
         </thead>
         <tbody>
-          {cart.map((item) => (
+          {cart.map((item, index) => (
             <tr key={item.id}>
               <td>
                 <img src={item.image} alt={item.name} />
@@ -33,12 +34,12 @@ export function TableDesktop() {
               <td>
                 <h4>{item.name}</h4>
                 <span>{currencyFormat(item.price)}</span>
-                <h4>Adicionais</h4>
+                <h4>Complementos</h4>
                 {/* Mapeando os adicionais e exibindo-os */}
                 {item.additionals && item.additionals.length > 0 ? (
                   <ul>
-                    {item.additionals.map((additional, index) => (
-                      <li key={index}>
+                    {item.additionals.map((additional, idx) => (
+                      <li key={idx}>
                         {additional.name} - {currencyFormat(additional.price)}
                       </li>
                     ))}
@@ -49,17 +50,11 @@ export function TableDesktop() {
               </td>
               <td>
                 <div>
-                  <button
-                    type='button'
-                    onClick={() => snackCartDecrement(item as SnackAdditionals)}
-                  >
+                  <button type='button' onClick={() => snackCartDecrementByIndex(index)}>
                     <img src={minusImg} alt='Remover Item' />
                   </button>
 
-                  <button
-                    type='button'
-                    onClick={() => snackCartIncrement(item as SnackAdditionals)}
-                  >
+                  <button type='button' onClick={() => snackCartIncrementByIndex(index)}>
                     <img src={plusImg} alt='Adicionar Item' />
                   </button>
                 </div>
@@ -68,7 +63,7 @@ export function TableDesktop() {
                 <h5>{currencyFormat(item.subtotal)}</h5>
               </td>
               <td>
-                <button type='button' onClick={() => removeSnackFromCart(item as SnackAdditionals)}>
+                <button type='button' onClick={() => removeSnackFromCartByIndex(index)}>
                   <FaTrashAlt />
                 </button>
               </td>
