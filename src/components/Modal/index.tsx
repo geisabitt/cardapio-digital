@@ -57,8 +57,11 @@ export function Modal({ snack, onClose }: ModalProps) {
 
       if (!group) return prev
 
-      if (currentGroupSelection.length >= group.maxSelect) {
-        return prev
+      if (group.maxSelect === 1) {
+        return {
+          ...prev,
+          [groupId]: isSelected ? [] : [additional],
+        }
       }
 
       if (isSelected) {
@@ -66,12 +69,15 @@ export function Modal({ snack, onClose }: ModalProps) {
           ...prev,
           [groupId]: currentGroupSelection.filter((item) => item.id !== additional.id),
         }
-      } else {
-        // Add the additional to the group
-        return {
-          ...prev,
-          [groupId]: [...currentGroupSelection, additional],
-        }
+      }
+
+      if (currentGroupSelection.length >= group.maxSelect) {
+        return prev
+      }
+
+      return {
+        ...prev,
+        [groupId]: [...currentGroupSelection, additional],
       }
     })
   }

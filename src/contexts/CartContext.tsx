@@ -12,6 +12,9 @@ interface CartContextProps {
   removeSnackFromCart: (snack: SnackAdditionals) => void
   snackCartIncrement: (snack: SnackAdditionals) => void
   snackCartDecrement: (snack: SnackAdditionals) => void
+  removeSnackFromCartByIndex: (index: number) => void
+  snackCartIncrementByIndex: (index: number) => void
+  snackCartDecrementByIndex: (index: number) => void
   confirmOrder: () => void
   payOrder: (customer: CustomerData) => void
 }
@@ -102,6 +105,48 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
     updateSnackQuantity(snack, snack.quantity - 1)
   }
 
+  //Funções baseadas no index para a acaiteria que pode haver o mesmo produto mas com adicionais diferentes
+
+  function removeSnackFromCartByIndex(index: number) {
+    const newCart = [...cart] // Cria uma cópia do array atual
+    newCart.splice(index, 1) // Remove o item pelo índice
+    saveCart(newCart) // Atualiza o estado e o localStorage
+  }
+
+  function updateSnackQuantityByIndex(index: number, newQuantity: number) {
+    if (newQuantity <= 0) return
+
+    const item = cart[index] // Localiza o item pelo índice
+    if (!item) return
+
+    const additionalsTotal = item.additionals
+      ? item.additionals.reduce((acc, additional) => acc + Number(additional.price || 0), 0)
+      : 0
+
+    const updatedItem = {
+      ...item,
+      quantity: newQuantity,
+      subtotal: (Number(item.price) + additionalsTotal) * newQuantity,
+    }
+
+    const newCart = [...cart]
+    newCart[index] = updatedItem // Atualiza o item pelo índice
+    saveCart(newCart)
+  }
+  function snackCartIncrementByIndex(index: number) {
+    const item = cart[index]
+    if (!item) return
+
+    updateSnackQuantityByIndex(index, item.quantity + 1)
+  }
+
+  function snackCartDecrementByIndex(index: number) {
+    const item = cart[index]
+    if (!item) return
+
+    updateSnackQuantityByIndex(index, item.quantity - 1)
+  }
+
   function confirmOrder() {
     navigate('/payment')
   }
@@ -117,7 +162,7 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
         return
       }
       toast.success('Pagamento realizado com sucesso')
-      clearCart() //deve ser executado apenas retorno positivo da api
+      clearCart()
     } catch (error) {
       toast.error('Erro ao processar Pedido')
       console.error(error)
@@ -132,6 +177,9 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
         removeSnackFromCart,
         snackCartIncrement,
         snackCartDecrement,
+        removeSnackFromCartByIndex,
+        snackCartIncrementByIndex,
+        snackCartDecrementByIndex,
         confirmOrder,
         payOrder,
       }}
