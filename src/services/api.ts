@@ -10,6 +10,8 @@ const api = axios.create({
 
 export const getAcais = () => api.get<SnackData[]>('/snacks?snack=acai')
 export const getAdditionals = () => api.get<Additionals[]>('/additionals');
+export const getOrders = () => api.get('/orders');
+export const getOrdersId = (id: string) => api.get(`/orders/${id}`);
 
 export const processCheckout = (cart: Snack[], customer: CustomerData) => api.post('/checkout', {
   cart,

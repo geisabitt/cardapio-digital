@@ -152,7 +152,6 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
   }
 
   async function payOrder(customer: CustomerData) {
-    console.log('Pay Order', cart, customer)
 
     try {
       const response = await processCheckout(cart, customer)
@@ -163,6 +162,7 @@ export function CartProvider({ children }: Readonly<CartProviderProps>) {
       }
       toast.success('Pagamento realizado com sucesso')
       clearCart()
+      //navigate('/payment')
     } catch (error) {
       toast.error('Erro ao processar Pedido')
       console.error(error)

@@ -4,6 +4,8 @@ import MainPage from './pages/Main'
 import AcaisPage from './pages/Main/Acais'
 import MyCart from './pages/MyCart'
 import Payment from './pages/Payment'
+import Orders from './pages/Admin'
+import OrderId from './pages/OrderId'
 
 export function AppRoutes() {
   return (
@@ -11,6 +13,8 @@ export function AppRoutes() {
       <Route path='/' element={<MainPage />}>
         <Route path='/' element={<AcaisPage />} />
       </Route>
+      <Route path='/admin' element={<Orders />}></Route>
+      <Route path='/pedido/:id' element={<OrderId />}></Route>
       <Route path='/cart' element={<MyCart />}></Route>
       <Route path='/payment' element={<Payment />}></Route>
     </Routes>
